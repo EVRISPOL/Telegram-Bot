@@ -28,6 +28,20 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
+app.add_handler(CommandHandler("xrp", smc_handler))
+
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+async def smc_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    message = analyze_crypto(symbol="BTC/USDT", timeframe="3m")
+    await update.message.reply_text(message)
 
 app.run_polling()
+async def smc_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        symbol = "XRP/USDT"
+        timeframe = "3m"
+        analysis = analyze_crypto(symbol, timeframe)
+        await update.message.reply_text(analysis)
+    except Exception as e:
+        await update.message.reply_text(f"Σφάλμα στην ανάλυση: {str(e)}")
+
